@@ -31,7 +31,7 @@ import tarfile
 import requests
 import six
 from six.moves import xrange  # pylint: disable=redefined-builtin
-import six.moves.urllib_request as urllib  # Imports urllib on Python2, urllib.request on Python3
+import six.moves.urllib as urllib  # Imports urllib on Python2, urllib.request on Python3
 
 from tensor2tensor.data_generators import text_encoder
 from tensor2tensor.data_generators import tokenizer

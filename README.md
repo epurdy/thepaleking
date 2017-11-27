@@ -25,11 +25,23 @@ Exploring linguistic style transfer and machine creativity
 
 # setup
 
-[sudo] pip install -r requirements.txt
-[sudo] python -m spacy download en
+Currently I think that spacy requires python >=3.5
+
+* [sudo] pip install -r requirements.txt
+* [sudo] python -m spacy download en
+* [sudo] python -m spacy download en_vectors_web_lg
+* Add tensor2tensor to your PYTHONPATH
 
 # quickstart
 
 The executables t2t-datagen (data ingest), t2t-trainer (training) and
 t2t-decoder (decoding) in tensor2tensor/tensor2tensor/bin are the place to
 start. We should wrap these in scripts pretty soon.
+
+* we've now wrapped data ingest in thepaleking/bin/datagen
+
+# known issues
+
+* given the way that we're currently doing ingest, examples from the source
+  domain are associated with a particular example from the target domain.
+  Hopefully, given an appropriate model, this will not be a problem.

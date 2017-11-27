@@ -1,1 +1,4 @@
 spacy
+sympy
+bz2file
+tensorflow-gpu

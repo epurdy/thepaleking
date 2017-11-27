@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+python3.6 tensor2tensor/tensor2tensor/bin/t2t-datagen \
+  --t2t_usr_dir thepaleking/thepaleking \
+  --problem text_style_transfer \
+  --data_dir /data/thepaleking \
+  --tmp_dir /data/thepaleking
