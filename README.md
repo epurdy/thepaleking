@@ -39,6 +39,7 @@ t2t-decoder (decoding) in tensor2tensor/tensor2tensor/bin are the place to
 start. We should wrap these in scripts pretty soon.
 
 * we've now wrapped data ingest in thepaleking/bin/datagen
+* we've now wrapped training in thepaleking/bin/train
 
 # known issues
 
