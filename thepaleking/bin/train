@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+python3.6 tensor2tensor/tensor2tensor/bin/t2t-trainer \
+  --t2t_usr_dir thepaleking/thepaleking \
+  --problem text_style_transfer \
+  --data_dir /data/thepaleking \
+  --tmp_dir /data/thepaleking \
+  --output_dir /data/thepaleking_models \
+  --model cycle_gan \
+  --hparams_set cycle_gan
