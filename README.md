@@ -19,7 +19,7 @@ Exploring linguistic style transfer and machine creativity
 
 * thepaleking/modalities: this is where we define the input and output layer of
   the network so that the core T2T models can be agnostic about what data
-  they're dealing with
+  they're dealing with.
 
 * thepaleking/models: this is where we define our own custom models.
 
