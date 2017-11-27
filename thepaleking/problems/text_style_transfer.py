@@ -1,9 +1,10 @@
 """(Unfinished) A data-ingest class for text style transfer"""
 import itertools as it
 
-import spacy
 from tensor2tensor.data_generators.problem import Text2TextProblem
 from tensor2tensor.utils import registry
+
+from thepaleking.utils.spacy_borg import SpacyBorg
 
 MAX_SENTENCE_LENGTH = 300
 MAX_SPACY_TEXT_LENGTH = 1000 * 1000
@@ -14,17 +15,7 @@ class TextStyleTransfer(Text2TextProblem):
         super().__init__(*args, **kwargs)
 
         # load spacy models
-        print('Loading spacy models...')
-        # presumably better but v. slow
-        #self.nlp = spacy.load('en_core_web_lg')
-        self.nlp = spacy.load('en')
-        self.vectors = spacy.load('en_vectors_web_lg')
-
-        # dicts mapping indices to spacy token ids and back
-        self.index_to_spacy = dict(enumerate(sorted(self.vectors.vocab.vectors.keys())))
-        self.spacy_to_index = {v:k for k, v in self.index_to_spacy.items()}
-
-        print('Done loading models.')
+        self.spacy = SpacyBorg()
 
     @property
     def is_character_level(self):
@@ -44,7 +35,7 @@ class TextStyleTransfer(Text2TextProblem):
 
     @property
     def targeted_vocab_size(self):
-        return len(self.index_to_spacy)
+        return len(self.spacy.index_to_spacy)
 
     @property
     def input_space_id(self):
@@ -69,12 +60,12 @@ class TextStyleTransfer(Text2TextProblem):
                 #subtext = text[i:i + MAX_SPACY_TEXT_LENGTH]
                 subtext = text.read(MAX_SPACY_TEXT_LENGTH)
                 print('Parsing', len(subtext), 'chars')
-                doc = self.nlp(subtext)
+                doc = self.spacy.nlp(subtext)
                 print('done parsing')
             
                 for sent in doc.sents:
                     spacy_ids = [word.lower for word in sent]
-                    indices = [self.spacy_to_index.get(id, 2) for id in spacy_ids]
+                    indices = [self.spacy.spacy_to_index.get(id, 2) for id in spacy_ids]
                     indices = indices[:MAX_SENTENCE_LENGTH]
                     indices = indices + [0] * (MAX_SENTENCE_LENGTH - len(indices))
 
@@ -110,3 +101,22 @@ class TextStyleTransfer(Text2TextProblem):
             print(i)
             yield {'source_ints': sent1,
                    'target_ints': sent2}
+
+    def hparams(self, defaults, unused_model_hparams):
+        p = defaults
+        p.stop_at_eos = int(True)
+
+        if self.has_inputs:
+            source_vocab_size = self._encoders["inputs"].vocab_size
+            p.input_modality = {
+                "inputs": (registry.Modalities.SYMBOL, source_vocab_size)
+            }
+        target_vocab_size = self._encoders["targets"].vocab_size
+        p.target_modality = (registry.Modalities.SYMBOL + ':spacy_text', target_vocab_size)
+        p.input_space_id = self.input_space_id
+        p.target_space_id = self.target_space_id
+
+    def eval_metrics(self):
+        return [
+            metrics.Metrics.NEG_LOG_PERPLEXITY,
+        ]
