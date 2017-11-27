@@ -18,7 +18,8 @@ Exploring linguistic style transfer and machine creativity
   knows about. These should inherit from Problem or TextProblem.
 
 * thepaleking/modalities: this is where we define the input and output layer of
-  the network so that T2T can be agnostic about
+  the network so that the core T2T models can be agnostic about what data
+  they're dealing with
 
 * thepaleking/models: this is where we define our own custom models.
 
@@ -31,4 +32,4 @@ Exploring linguistic style transfer and machine creativity
 
 The executables t2t-datagen (data ingest), t2t-trainer (training) and
 t2t-decoder (decoding) in tensor2tensor/tensor2tensor/bin are the place to
-start.
+start. We should wrap these in scripts pretty soon.
